@@ -6,13 +6,13 @@ metadata:
 spec:
  logLevel: Normal
  managementState: Managed
-  nodeSelector:
-    nodeSelectorTerms:
-      - matchExpressions:
-          - key: cluster.ocs.openshift.io/openshift-storage
-            operator: In
-            values:
-              - '' 
+ nodeSelector:
+   nodeSelectorTerms:
+     - matchExpressions:
+         - key: cluster.ocs.openshift.io/openshift-storage
+           operator: In
+           values:
+             - '' 
  storageClassDevices:
  - devicePaths:
    - /dev/nvme0n1
