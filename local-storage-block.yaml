@@ -13,8 +13,8 @@ spec:
             operator: In
             values:
               - '' 
- storageClassDevices:
- - devicePaths:
-   - /dev/nvme0n1
-   storageClassName: localblock-sc
-   volumeMode: Block
+  storageClassDevices:
+  - devicePaths:
+    - /dev/nvme0n1
+    storageClassName: localblock-sc
+    volumeMode: Block
