@@ -15,6 +15,6 @@ spec:
               - '' 
   storageClassDevices:
   - devicePaths:
-    - /dev/nvme0n1
+    - /dev/vda
     storageClassName: localblock-sc
     volumeMode: Block

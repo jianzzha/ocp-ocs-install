@@ -6,12 +6,12 @@ $ocos delete --timeout=5s deployment rook-ceph-tools
 oc delete --timeout=5s -f https://raw.githubusercontent.com/jianzzha/ocp-ocs-install/master/ocs-cluster.yaml 
 sleep 5
 
-$ocos delete pvc --all
+$ocos delete pvc --timeout=5s --all 
 $ocos delete --timeout=5s pv --all
-$ocos delete storagecluster --all --wait=true --timeout=5m --cascade=false
-$ocos delete cephcluster --all --wait=true --timeout=5m
-$ocos delete service --all --wait=true --timeout=5m
-oc delete -f https://raw.githubusercontent.com/openshift/ocs-operator/release-4.3/deploy/deploy-with-olm.yaml
+$ocos delete storagecluster --all --wait=true --timeout=1m --cascade=false
+$ocos delete cephcluster --all --wait=true --timeout=1m
+$ocos delete service --all --wait=true --timeout=1m
+oc delete -f https://raw.githubusercontent.com/openshift/ocs-operator/release-4.3/deploy/deploy-with-olm.yaml --timeout=1m
 #$ocos delete deployment --all --wait=true --timeout=5m
 #$ocos delete ds --all --wait=true --timeout=5m
 #oc delete project openshift-storage --wait=true --timeout=5m
@@ -25,5 +25,12 @@ oc delete --timeout=5s -f https://raw.githubusercontent.com/jianzzha/ocp-ocs-ins
 
 echo "Local-storage and OCS are uninstalled, now wipe all devices on storage hosts!!!"
 
-ssh core@baremetal "sudo rm -rf /var/lib/rook" 
-ssh core@baremetal 'for d in nvme0n1 sdb sdc sdd sde sdf sdg sdh; do sudo pvremove --force /dev/$d ; sudo sgdisk -Z /dev/$d; done'
+for i in 0 1 2; do
+	ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" core@worker$i "sudo sgdisk --zap-all /dev/vda"
+	oc delete node worker$i
+done
+
+> /root/.ssh/known_hosts
+ 
+#ssh core@baremetal "sudo rm -rf /var/lib/rook" 
+#ssh core@baremetal 'for d in nvme0n1 sdb sdc sdd sde sdf sdg sdh; do sudo pvremove --force /dev/$d ; sudo sgdisk -Z /dev/$d; done'
